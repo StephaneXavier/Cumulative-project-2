@@ -2,6 +2,7 @@
 
 const db = require("../db.js");
 const { BadRequestError, NotFoundError } = require("../expressError");
+const { findFiltered } = require("./company.js");
 const Company = require("./company.js");
 const {
     commonBeforeAll,
@@ -206,3 +207,68 @@ describe("remove", function () {
         }
     });
 });
+
+
+/**************minMaxEmployees and findFiltered*/
+
+describe("minMaxEmployees and findFiltered", () => {
+    test('minMaxEmployees works', () => {
+        let result1 = Company.minMaxEmployeesFilterToSqlQuery("1", "20");
+        let result2 = Company.minMaxEmployeesFilterToSqlQuery(undefined, undefined);
+        let result3 = Company.minMaxEmployeesFilterToSqlQuery(undefined, "3");
+
+        expect(result1).toBe(` num_employees >= 1  AND  num_employees <= 20 `);
+        expect(result2).toBe(``);
+        expect(result3).toBe(` num_employees <= 3 `);
+    });
+    test('findFiltered throws error when minEmployee > maxEmployee', async () => {
+        try {
+            await Company.findFilteredCompanies({ maxEmployees: "300", minEmployees: "100" })
+        } catch (e) {
+            expect(e).toBeInstance(BadRequestError)
+        }
+    });
+    test('findFilteredCompanies works with 1 param, 2 params or 3', async () => {
+        let filters1 = { name: "c" };
+        let filters2 = { maxEmployees: "3", minEmployees: "2" };
+        let filters3 = { name: "c", maxEmployees: "3", minEmployees: "2" };
+
+        let result1 = await Company.findFilteredCompanies(filters1);
+        let result2 = await Company.findFilteredCompanies(filters2);
+        let result3 = await Company.findFilteredCompanies(filters3);
+
+        expect(result1).toEqual([
+            {
+                handle: "c1",
+                name: "C1",
+                description: "Desc1",
+                numEmployees: 1,
+                logoUrl: "http://c1.img",
+            },
+            {
+                handle: "c2",
+                name: "C2",
+                description: "Desc2",
+                numEmployees: 2,
+                logoUrl: "http://c2.img",
+            },
+            {
+                handle: "c3",
+                name: "C3",
+                description: "Desc3",
+                numEmployees: 3,
+                logoUrl: "http://c3.img",
+            }
+        ])
+    });
+    test('findFilteredCompanies throws error when incorrect params added', async () => {
+        try {
+           
+            await Company.findFilteredCompanies({ name: 'c1', bad: 'mouhaha' })
+        }
+        catch (e) {
+            expect(e.status).toBe(400);
+            expect(e instanceof BadRequestError).toBeTruthy();
+        }
+    });
+})
