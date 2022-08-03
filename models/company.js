@@ -78,14 +78,24 @@ class Company {
                   description,
                   num_employees AS "numEmployees",
                   logo_url AS "logoUrl"
-           FROM companies
-           WHERE handle = $1`,
+            FROM companies
+            WHERE handle = $1`,
             [handle]);
-
-        const company = companyRes.rows[0];
-
-        if (!company) throw new NotFoundError(`No company: ${handle}`);
-
+        
+        const companyRawData = companyRes.rows[0];
+        if (!companyRawData) throw new NotFoundError(`No company: ${handle}`);
+       
+        const jobsRawData = await db.query(`SELECT * FROM jobs WHERE company_handle = '${companyRawData.handle}'`);
+        const jobs = jobsRawData.rows;
+      
+        const company = {
+            handle: companyRawData.handle,
+            description: companyRawData.description,
+            numEmployees: companyRawData.numEmployees,
+            logoUrl: companyRawData.logoUrl,
+            jobs: jobs
+        };
+        
         return company;
     }
 

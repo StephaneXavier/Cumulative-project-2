@@ -1,0 +1,43 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        
+    ],
+    "properties": {
+        "title": {
+            "type": "string",
+            "default": "",
+            "title": "The title Schema",
+            "examples": [
+                "Junior Developper"
+            ]
+        },
+        "minSalary": {
+            "type": "integer",
+            "default": 0,
+            "title": "The salary Schema",
+            "examples": [
+                75000
+            ]
+        },
+        "hasEquity": {
+            "type": "boolean",
+            "default": false,
+            "title": "The equity Schema",
+            "examples": [
+                0
+            ]
+        }
+    },
+    "additionalProperties": false,
+    "examples": [{
+        "title": "Junior Developper",
+        "salary": 75000,
+        "equity": 0,
+        "company_handle": "apple"
+    }]
+}
