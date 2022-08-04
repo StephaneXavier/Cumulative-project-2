@@ -12,6 +12,7 @@ const {
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
+
 beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
@@ -92,13 +93,23 @@ describe("findAll", function () {
 
 describe("get", function () {
     test("works", async function () {
+        let job = await db.query(`SELECT id FROM jobs WHERE company_handle='c1'`)
         let company = await Company.get("c1");
-        expect(company).toEqual({
+        expect(company).toMatchObject({
             handle: "c1",
-            name: "C1",
+            // name: "C1",
             description: "Desc1",
             numEmployees: 1,
             logoUrl: "http://c1.img",
+            jobs:[{
+                company_handle: "c1",
+                id: job.rows[0].id,
+                salary: 1,
+                title: "j1",
+                equity:'0'
+            }
+
+            ]
         });
     });
 
@@ -272,3 +283,4 @@ describe("minMaxEmployees and findFiltered", () => {
         }
     });
 })
+

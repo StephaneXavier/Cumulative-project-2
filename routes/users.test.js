@@ -145,6 +145,8 @@ describe("POST /users", function () {
 
 describe("GET /users", function () {
     test("works for admin", async function () {
+        const j1 = await db.query(`SELECT id FROM jobs WHERE title = 'j1'`);
+        const j2 = await db.query(`SELECT id FROM jobs WHERE title='j2'`);
         const resp = await request(app)
             .get("/users")
             .set("authorization", `Bearer ${u1Token}`);
@@ -156,6 +158,7 @@ describe("GET /users", function () {
                     lastName: "U1L",
                     email: "user1@user.com",
                     isAdmin: false,
+                    jobs:[j1.rows[0].id,j2.rows[0].id]
                 },
                 {
                     username: "u2",
@@ -163,6 +166,7 @@ describe("GET /users", function () {
                     lastName: "U2L",
                     email: "user2@user.com",
                     isAdmin: false,
+                    jobs:[null]
                 },
                 {
                     username: "u3",
@@ -170,6 +174,7 @@ describe("GET /users", function () {
                     lastName: "U3L",
                     email: "user3@user.com",
                     isAdmin: false,
+                    jobs:[null]
                 },
             ],
         });
@@ -207,6 +212,7 @@ describe("GET /users/:username", function () {
         const resp = await request(app)
             .get(`/users/u1`)
             .set("authorization", `Bearer ${u1Token}`);
+            
         expect(resp.body).toEqual({
             user: {
                 username: "u1",
@@ -390,3 +396,5 @@ describe("DELETE /users/:username", function () {
         expect(resp.statusCode).toEqual(404);
     });
 });
+
+

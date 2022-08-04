@@ -54,7 +54,7 @@ class Job {
 
     static async findAll() {
         const jobsRes = await db.query(
-            `SELECT title, salary, equity, company_handle
+            `SELECT id,title, salary, equity, company_handle
              FROM jobs
              ORDER BY title`);
         return jobsRes.rows;
@@ -185,7 +185,7 @@ class Job {
             )
         } else {
             result = await db.query(
-                `SELECT title, equity, salary, company_handle 
+                `SELECT id,title, equity, salary, company_handle 
                  FROM jobs
                  WHERE ${title ? `LOWER(title) LIKE '%${title.toLowerCase()}%'` : ''} 
                  ${title && minSalary ? ' AND ' : ''}

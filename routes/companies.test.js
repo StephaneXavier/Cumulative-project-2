@@ -225,7 +225,12 @@ describe("PATCH /companies/:handle", function () {
 /************************************** DELETE /companies/:handle */
 
 describe("DELETE /companies/:handle", function () {
+    
     test("works for admin", async function () {
+        const test = await db.query(`SELECT * FROM companies WHERE handle='c1'`)
+        console.log('^^^^^^^^^^^^^^^^^^^^^')
+        console.log(test.rows)
+        console.log('^^^^^^^^^^^^^^^^^^^^^')
         const resp = await request(app)
             .delete(`/companies/c1`)
             .set("authorization", `Bearer ${u1Token}`);
@@ -252,3 +257,5 @@ describe("DELETE /companies/:handle", function () {
         expect(resp.statusCode).toEqual(404);
     });
 });
+
+

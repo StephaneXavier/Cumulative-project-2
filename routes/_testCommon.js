@@ -8,10 +8,16 @@ const { create } = require("../models/company");
 const Job = require("../models/job.js");
 
 async function commonBeforeAll() {
+    
+    await db.query("DELETE FROM applications");
+
+    await db.query("DELETE FROM jobs");
     // noinspection SqlWithoutWhere
     await db.query("DELETE FROM users");
     // noinspection SqlWithoutWhere
     await db.query("DELETE FROM companies");
+
+
 
     await Company.create(
         {
@@ -80,6 +86,11 @@ async function commonBeforeAll() {
         equity: '0.3',
         company_handle: 'c3'
     });
+    const j1 = await db.query(`SELECT id FROM jobs WHERE title='j1'`);
+    const j2 = await db.query(`SELECT id FROM jobs WHERE title='j2'`);
+    await User.application('u1', j1.rows[0].id)
+    await User.application('u1', j2.rows[0].id)
+
 
 }
 
@@ -87,6 +98,7 @@ async function commonBeforeAll() {
 
 async function commonBeforeEach() {
     await db.query("BEGIN");
+    
 }
 
 async function commonAfterEach() {
@@ -109,5 +121,5 @@ module.exports = {
     commonAfterAll,
     u1Token,
     u2Token,
-    
+
 };

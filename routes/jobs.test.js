@@ -156,7 +156,7 @@ describe("PATCH /jobs/:id", function () {
                 title: "j1 new title",
             })
             .set("authorization", `Bearer ${u1Token}`);
-        console.log(resp.body)
+        
         expect(resp.body).toMatchObject({
             job: {
                 title: "j1 new title",

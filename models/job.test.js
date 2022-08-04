@@ -15,6 +15,9 @@ afterAll(commonAfterAll);
 
 /******************create()***********/
 
+
+console.log('in job.test.js JOB MODEL')
+
 describe('Job.create()', () => {
     test('create new job', async () => {
         const newJob = { title: 'newJob', salary: 9000, equity: '0', company_handle: "c1" };
@@ -49,7 +52,7 @@ describe('Job.findAll()', () => {
     test('finds all jobs', async () => {
         const jobs = await Job.findAll();
         expect(jobs.length).toBe(3);
-        expect(jobs).toEqual(
+        expect(jobs).toMatchObject(
             [
                 { title: 'j1', salary: 1, equity: '0', company_handle: 'c1' },
                 { title: 'j2', salary: 2, equity: '0.2', company_handle: 'c2' },
@@ -137,3 +140,4 @@ describe('Job.remove()', () => {
         }
     });  
 })
+

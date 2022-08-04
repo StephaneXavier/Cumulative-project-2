@@ -109,7 +109,10 @@ describe("register", function () {
 
 describe("findAll", function () {
   test("works", async function () {
+    const j1 = await db.query(`SELECT id FROM jobs WHERE title='j1'`);
+    const j2 = await db.query(`SELECT id FROM jobs WHERE title='j2'`);
     const users = await User.findAll();
+    
     expect(users).toEqual([
       {
         username: "u1",
@@ -117,6 +120,10 @@ describe("findAll", function () {
         lastName: "U1L",
         email: "u1@email.com",
         isAdmin: false,
+        jobs: [
+            j1.rows[0].id,
+            j2.rows[0].id
+        ]
       },
       {
         username: "u2",
@@ -124,6 +131,7 @@ describe("findAll", function () {
         lastName: "U2L",
         email: "u2@email.com",
         isAdmin: false,
+        jobs:[null]
       },
     ]);
   });
@@ -228,3 +236,4 @@ describe("remove", function () {
     }
   });
 });
+
